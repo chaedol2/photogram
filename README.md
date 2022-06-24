@@ -1,5 +1,8 @@
 # 포토그램 - 인스타그램 클론 코딩
 
+### 내용정리
+- notion : https://www.notion.so/chaedol2/SNS-aa84bbee74cb457cad87dad177b4775d
+
 ### 의존성
 
 - Sring Boot DevTools
