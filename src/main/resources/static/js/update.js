@@ -2,7 +2,7 @@
 function update(userId) {
 	event.preventDefault(); // 폼태그 액션을 막기(더이상 진행되지 않도록)
 	
-	let data = $("#profileUpdate").serialize();
+	let data = $("#profileUpdate").serialize(); //폼태그에 있는 key=value 전송시 사용
 	
 	console.log(data);
 	

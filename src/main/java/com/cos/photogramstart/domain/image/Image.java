@@ -1,6 +1,7 @@
 package com.cos.photogramstart.domain.image;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,8 +10,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
+import javax.persistence.Transient;
 
+import com.cos.photogramstart.domain.comment.Comment;
+import com.cos.photogramstart.domain.likes.Likes;
 import com.cos.photogramstart.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -37,10 +43,23 @@ public class Image { //N, 1
 	private User user; // 1, 1
 	
 	// 이미지 좋아요
+	@JsonIgnoreProperties({"image"}) // Likeservice.java에서 Image객체를 불러올 때 Likes를 불러오는데 Likes안에있는 image를 무한참조방지
+	@OneToMany(mappedBy = "image") // 하나의 이미지에는 여러개의 좋아요가 가능하므로 @OneToMany(LAZY로딩)이고, 나는 연관관계의 주인이 아닙니다 FK만들지마세요 (mappedBy="image")이다.
+	private List<Likes> likes;
 	
 	// 댓글
+	@OrderBy("id DESC") // id로 내림차순 뽑기
+	@JsonIgnoreProperties({"image"})
+	@OneToMany(mappedBy = "image") // mappedBy="image"에서 image는 foriegnkey 자바 변수를 적어준다.
+	private List<Comment> comments;
 	
 	private LocalDateTime createDate;
+	
+	@Transient // import javax.., DB에 칼럼이 만들어지지 않는다.
+	private boolean likeState;
+	
+	@Transient // DB에 칼럼이 만들어지지 않는다.
+	private int likeCount;
 	
 	@PrePersist //DB에 INSERT 되기 직전에 실행
 	public void createDate() {

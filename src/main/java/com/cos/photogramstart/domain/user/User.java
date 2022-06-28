@@ -32,7 +32,7 @@ public class User {
 	@GeneratedValue(strategy=GenerationType.IDENTITY) // 번호 증가 전략이 데이터베이스를 따라간다.
 	private int id;
 	
-	@Column(length=20, unique=true)
+	@Column(length=100, unique=true) // OAuth2 로그인을 위해 컬럼 늘리기
 	private String username;
 	@Column(nullable = false)
 	private String password;
@@ -52,7 +52,7 @@ public class User {
 	// User를 Select할 때 해당 User id로 등록된 image들을 다 가져와.
 	// LAZY를 작성하는 이유 : User를 Select할 때 해당 User id로 등록된 image들을 가져오지마. 대신 image들이 호출될때 가져와.
 	// Eager = User를 Select할 때 해당 User id들을 전부 Join해서 가져와!
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY) // 유저정보를 가져올때마다 images가 필요하지않기떄문에 get호출할때만 호출이 되게 한다.
 	@JsonIgnoreProperties({"user"}) // Image 객체안의 user는 하지마
 	private List<Image> images; // 양방향 매핑
 	
@@ -62,5 +62,15 @@ public class User {
 	public void createDate() {
 		this.createDate = LocalDateTime.now();
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", name=" + name + ", website="
+				+ website + ", bio=" + bio + ", email=" + email + ", phone=" + phone + ", gender=" + gender
+				+ ", profileImageUrl=" + profileImageUrl + ", role=" + role + ", createDate="
+				+ createDate + "]";
+	}
+	
+	
 	
 }

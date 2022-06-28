@@ -57,25 +57,12 @@ public class AuthController {
 	@PostMapping("/auth/signup")
 	public String signup(@Valid SignupDto signupDto, BindingResult bindingResult) { //key = value형식 (x-www-form-urlencoded)
 		//전처리
-		if(bindingResult.hasErrors()) { //@valid 에 문제가 발생하면 bindingResult에 에러가 생긴다
-			Map<String, String> errorMap = new HashMap<>();//에러를 담을 에러맵 생성
-			
-			for(FieldError error : bindingResult.getFieldErrors()) {//bindingResult에 필드에러
-				errorMap.put(error.getField(), error.getDefaultMessage());// key: error.getField() value: error.getDefaultMessage() 로 담는다.
-				System.out.println("==================================");
-				System.out.println(error.getDefaultMessage());
-				System.out.println("==================================");
-			}
-			throw new CustomValidationException("유효성 검사 실패함", errorMap);//런타임 예외상황 강제 발동
-		}else {
-			log.info(signupDto.toString());
-			//User <- SignupDto
-			User user = signupDto.toEntity();
-			log.info(user.toString());
-			User userEntity = authService.회원가입(user);
-			System.out.println(userEntity);
-			return "auth/signin";			
-		}
+		
+		//User <- SignupDto
+		User user = signupDto.toEntity();
+		authService.회원가입(user);
+		
+		return "auth/signin";	
 		
 	}
 }
